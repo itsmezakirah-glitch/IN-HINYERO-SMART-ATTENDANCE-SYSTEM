@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IN-HINYERO Attendance System</title>
+    <!-- Flask template dynamic engine injection para sa style asset file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div id="loading-screen" class="screen">
+        <div class="loader-container">
+            <div class="logo-wrapper">
+                <!-- Gumagamit na ng tamang asset binding para sa PUP logo link -->
+                <img src="{{ url_for('static', filename='app-logo.png') }}" onerror="this.src='{{ url_for('static', filename='app-logo.jpg') }}'; this.onerror=this.src='{{ url_for('static', filename='app-logo.jpeg') }}';" alt="PUP Logo" class="welcome-logo">
+            </div>
+            <h1 class="welcome-text">WELCOME</h1>
+            <p class="subtitle-text">IN-HINYERO/A</p>
+            <div class="loading-bar"><div class="progress"></div></div>
+        </div>
+    </div>
+
+    <div id="login-screen" class="screen hidden">
+        <div class="login-card">
+            <h2 class="login-main-title">SINO KA MUNA?</h2>
+            <p class="card-subtitle">Student Information Portal Check</p>
+            
+            <input type="text" id="student-id" placeholder="Student ID / Admin Username">
+            <input type="text" id="full-name" placeholder="Full Name / Portal Password">
+            
+            <button class="login-btn" id="login-btn">Log In as Student</button>
+            <button class="login-btn" id="admin-login-btn" style="background: transparent; border: 2px solid var(--pup-gold); color: var(--pup-gold); margin-top: -5px;">Log In as Admin / Officer</button>
+            
+            <p id="login-status-msg" class="verification-text hidden"></p>
+        </div>
+    </div>
+
+    <div id="dashboard-screen" class="screen hidden">
+        <div class="dashboard-container">
+            <header class="dash-header">
+                <div class="header-logo-group">
+                    <img src="{{ url_for('static', filename='app-logo.png') }}" onerror="this.src='{{ url_for('static', filename='app-logo.jpg') }}'; this.onerror=this.src='{{ url_for('static', filename='app-logo.jpeg') }}';" alt="PUP Logo" class="header-logo">
+                    <span class="logo-text" id="logo-reset" style="cursor: pointer;">IN-HINYERO/A</span>
+                </div>
+                <nav class="dash-nav">
+                    <button class="nav-item active" id="nav-home-btn" data-tab="tab-home">HOME</button>
+                    <button class="nav-item" id="nav-schedule-btn" data-tab="tab-schedule">CLASS SCHEDULE</button>
+                    <button class="nav-item" id="nav-logs-btn" data-tab="tab-logs">ATTENDANCE LOGS</button>
+                    <button class="nav-item" id="nav-guide-btn" data-tab="tab-guide">SYSTEM GUIDE</button>
+                    <button class="nav-item hidden" id="nav-admin-btn" data-tab="tab-admin" style="border-color: var(--pup-gold); color: var(--pup-gold);">ADMIN SETTINGS</button>
+                </nav>
+            </header>
+            
+            <header>
+            <main class="dash-main">
+
+                <div id="tab-home" class="tab-content">
+                    
+                    <div id="step-location" class="flow-card">
+                        <div class="portal-banner-text">NANDITO KA BA TALAGA?</div>
+                        <div class="map-placeholder">
+                            <div class="satellite-sim"></div>
+                            <div class="marker-ping"></div>
+                        </div>
+                        <button class="action-btn" id="btn-check-location">checking your coordinates...</button>
+                    </div>
+
+                    <div id="step-qr" class="flow-card hidden">
+                        <div class="portal-banner-text">NALILIGAW KA BA?</div>
+                        <div class="scanner-window qr-glow">
+                            <video id="qr-video-feed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; transform: scaleX(-1); background: #000;"></video>
+                            <div class="laser-line"></div>
+                        </div>
+                        <button class="action-btn" id="btn-scan-qr">scan the given QR code...</button>
+                    </div>
+
+                    <div id="step-face" class="flow-card hidden">
+                        <div class="portal-banner-text">IKAW BA TALAGA IYAN?</div>
+                        <div class="scanner-window face-glow">
+                            <video id="face-video-feed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; transform: scaleX(-1); background: #000;"></video>
+                            <div class="laser-line"></div>
+                        </div>
+                        <button class="action-btn" id="btn-scan-face">scan your alluring face...</button>
+                    </div>
+
+                    <div id="step-success" class="flow-card success-theme hidden">
+                        <h1 class="success-title">YEHEY! NANDITO KA NGA!</h1>
+                        <p class="success-subtitle">YOUR PRESENCE IS MORE THAN ENOUGH...</p>
+                        <div class="success-badge"><div class="badge-core"></div></div>
+                        <p class="log-status">ATTENDANCE RECORDED: <span class="status-tag present-green-tag">PRESENT</span></p>
+                        <div class="btn-group">
+                            <button class="alt-btn" id="btn-record-another">RECORD ANOTHER</button>
+                            <button class="close-btn" id="btn-close-workflow">CLOSE</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="tab-schedule" class="tab-content hidden">
+                    <div class="display-panel">
+                        <h2 class="panel-title schedule-gold-title">CURRENT SEMESTER SCHEDULE</h2>
+                        <table class="cyber-table">
+                            <thead>
+                                <tr><th>Subject Code</th><th>Description</th><th>Time</th><th>Room</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>CMPE 101</td><td>Object-Oriented Programming</td><td>07:30 AM - 10:30 AM</td><td>CEA-302</td></tr>
+                                <tr><td>CMPE 103</td><td>Data Structures & Algorithms</td><td>01:00 PM - 04:00 PM</td><td>CEA-405</td></tr>
+                                <tr><td>MATH 209</td><td>Differential Equations</td><td>10:30 AM - 12:30 PM</td><td>CEA-201</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="tab-logs" class="tab-content hidden">
+                    <div class="display-panel">
+                        <h2 class="panel-title">REAL-TIME PORTAL RECORDS</h2>
+                        <table class="cyber-table">
+                            <thead>
+                                <tr><th>Student ID</th><th>Full Name</th><th>Timestamp</th><th>Verification Status</th></tr>
+                            </thead>
+                            <tbody id="live-logs-table">
+                                <tr><td>1892-00123-MN-0</td><td>ZAKIRAH BIGAR(You)</td><td>07:28:14 AM</td><td><span class="status-tag verified-green-tag">VERIFIED</span></td></tr>
+                                <tr><td>1892-05421-MN-0</td><td>HANSOL V. CHWE</td><td>07:42:05 AM</td><td><span class="status-tag late-teal-tag">LATE</span></td></tr>
+                                <tr><td>1892-09112-MN-0</td><td>BOO SEUNGKWAN</td><td>--:--:--</td><td><span class="status-tag absent-red-tag">ABSENT</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="tab-guide" class="tab-content hidden">
+                    <div class="display-panel text-guide">
+                        <h2 class="panel-title protocol-gold-title">IN-HINYERO ARCHITECTURE PROTOCOL</h2>
+                        <div class="guide-box">
+                            <h3><span class="num-gold">1.</span> Verification Rule Framework</h3>
+                            <p>Location variance is CEA latitude coordinates. QR terminal locks sequence as well.</p>
+                            <h3><span class="num-gold">2.</span> Biometric Policy</h3>
+                            <p>Faces are matched via portal mode. Failure is flagged as ABSENT.</p>
+                            <h3><span class="num-gold">3.</span> Timestamp Rules</h3>
+                            <p>Tardy after 15 minutes will triggers status flag as automatically LATE.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-admin" class="tab-content hidden">
+                    <div class="display-panel">
+                        <h2 class="panel-title protocol-gold-title">OFFICER TERMINAL CONFIGURATION</h2>
+                        <div class="guide-box" style="display: flex; flex-direction: column; gap: 20px; padding: 10px 0;">
+                            <div>
+                                <h3 style="margin-bottom: 5px;"><span class="num-gold">■</span> Late Threshold Cutoff Settings</h3>
+                                <p style="margin-bottom: 15px;">Determine the threshold timestamp matrix boundary. Entries processed beyond this configuration parameter will auto-flag as LATE.</p>
+                                
+                                <div style="display:flex; gap: 15px; align-items: center; max-width: 400px; background: rgba(128,0,0,0.05); padding: 15px; border-radius: 8px; border: 1px solid var(--card-stroke);">
+                                    <label for="late-time-input" style="font-weight: 700; color: var(--pup-maroon); font-size: 0.95rem;">Cutoff Oras:</label>
+                                    <input type="time" id="late-time-input" value="07:45" style="padding: 8px; border-radius: 6px; border: 1px solid var(--card-stroke); outline: none; font-weight: bold; color: #1d2939; flex: 1;">
+                                    <button class="action-btn" id="btn-save-admin-config" style="width: auto; padding: 8px 15px; font-size: 0.8rem; border-radius: 6px;">SAVE CONFIG</button>
+                                </div>
+                            </div>
+                            
+                            <hr style="border: 0; border-top: 1px dashed var(--card-stroke); margin: 10px 0;">
+                            
+                            <div>
+                                <h3><span class="num-gold">■</span> System Overrides</h3>
+                                <p style="margin-bottom: 10px;">Operational override switch modifiers for official administrative clearance usage during technical audits.</p>
+                                <button class="action-btn" id="btn-clear-logs" style="background: transparent; border: 2px solid var(--pup-maroon); color: var(--pup-maroon); width: auto; padding: 10px 20px; border-radius: 30px;">Purge Section Logs Buffer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Flask template dynamic engine injection para sa core application logic file -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- QR Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+
+    <div class="container">
+
+    <h1>Camera QR Scanner</h1>
+
+    <div id="reader"></div>
+
+    <p id="result">Waiting for scan...</p>
+
+</div>
+
+<script>
+    
+function onScanSuccess(decodedText, decodedResult) {
+
+    // Show result
+    document.getElementById("result").innerHTML =
+        "Scanned Successfully!";
+
+    // Open scanned URL
+    window.location.href = decodedText;
+}
+
+let html5QrcodeScanner = new Html5QrcodeScanner(
+    "reader",
+    {
+        fps: 10,
+        qrbox: 250
+    }
+);
+
+html5QrcodeScanner.render(onScanSuccess);
+
+</script>
+</body>
+</html>

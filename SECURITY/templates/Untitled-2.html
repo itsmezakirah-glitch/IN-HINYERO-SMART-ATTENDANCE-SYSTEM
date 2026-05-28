@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesteng OOP Toh App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="loading-screen" class="screen">
+        <div class="loader-container">
+            <h1 class="welcome-text">WELCOME</h1>
+            <p class="subtitle-text">IN-HINYERO/A</p>
+            <div class="loading-bar"><div class="progress"></div></div>
+        </div>
+    </div>
+
+    <div id="login-screen" class="screen hidden">
+        <div class="login-card">
+            <h2>SINO KA MUNA?</h2>
+            <p class="card-subtitle">Please verify your student identity</p>
+            <input type="text" id="student-id" placeholder="Student ID">
+            <input type="text" id="full-name" placeholder="Full Name">
+            <button class="login-btn" id="login-btn">Log In</button>
+            <p id="login-status-msg" class="impostor-text hidden"></p>
+        </div>
+    </div>
+
+    <div id="dashboard-screen" class="screen hidden">
+        <div class="dashboard-container">
+            <header class="dash-header">
+                <span class="logo-text" id="logo-reset" style="cursor: pointer;">IN-HINYERO/A</span>
+                <nav class="dash-nav">
+                    <button class="nav-item active" data-tab="tab-home">HOME</button>
+                    <button class="nav-item" data-tab="tab-schedule">CLASS SCHEDULE</button>
+                    <button class="nav-item" data-tab="tab-logs">ATTENDANCE LOGS</button>
+                    <button class="nav-item" data-tab="tab-guide">SYSTEM GUIDE</button>
+                </nav>
+            <button id="theme-toggle" class="nav-item" style="border-color: #00ffff; color: #00ffff;">☀️ LIGHT MODE</button>
+            </header>
+            
+            <main class="dash-main">
+
+                <div id="tab-home" class="tab-content">
+                    
+                    <div id="step-location" class="flow-card">
+                        <h2 class="glitch-title">NANDITO KA BA TALAGA?</h2>
+                        <div class="map-placeholder">
+                            <div class="satellite-sim"></div>
+                            <div class="marker-ping"></div>
+                        </div>
+                        <button class="action-btn" id="btn-check-location">checking your location...</button>
+                    </div>
+
+                    <div id="step-qr" class="flow-card hidden">
+                        <h2 class="glitch-title">NALILIGAW KA BA?</h2>
+                        <div class="scanner-window qr-glow">
+                            <div class="laser-line"></div>
+                        </div>
+                        <button class="action-btn" id="btn-scan-qr">scan the given QR code...</button>
+                    </div>
+
+                    <div id="step-face" class="flow-card hidden">
+                        <h2 class="glitch-title">IKAW BA TALAGA IYAN?</h2>
+                        <div class="scanner-window face-glow">
+                            <div class="laser-line"></div>
+                        </div>
+                        <button class="action-btn" id="btn-scan-face">scan your alluring face...</button>
+                    </div>
+
+                    <div id="step-success" class="flow-card success-theme hidden">
+                        <h1 class="success-title">YEHEY! NANDITO KA NGA!</h1>
+                        <p class="success-subtitle">YOUR PRESENCE IS MORE THAN ENOUGH...</p>
+                        <div class="success-badge"><div class="badge-core"></div></div>
+                        <p class="log-status">ATTENDANCE RECORDED: <span class="status-tag">PRESENT</span></p>
+                        <div class="btn-group">
+                            <button class="alt-btn" onclick="location.reload()">RECORD ANOTHER</button>
+                            <button class="close-btn">CLOSE</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="tab-schedule" class="tab-content hidden">
+                    <div class="display-panel">
+                        <h2 class="panel-title">CURRENT SEMESTER SCHEDULE</h2>
+                        <table class="cyber-table">
+                            <thead>
+                                <tr><th>Subject Code</th><th>Description</th><th>Time</th><th>Room</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>CpE 101</td><td>Object-Oriented Programming</td><td>07:30 AM - 10:30 AM</td><td>CEA-302</td></tr>
+                                <tr><td>CpE 102</td><td>Data Structures & Algorithms</td><td>01:00 PM - 04:00 PM</td><td>CEA-405</td></tr>
+                                <tr><td>MATH 04</td><td>Differential Equations</td><td>10:30 AM - 12:30 PM</td><td>CEA-201</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="tab-logs" class="tab-content hidden">
+                    <div class="display-panel">
+                        <h2 class="panel-title">REAL-TIME PORTAL RECORDS</h2>
+                        <table class="cyber-table">
+                            <thead>
+                                <tr><th>Student ID</th><th>Full Name</th><th>Timestamp</th><th>Verification Status</th></tr>
+                            </thead>
+                            <tbody id="live-logs-table">
+                                <tr><td>2024-00123-MN-0</td><td>Zakirah (You)</td><td>07:28:14 AM</td><td><span class="status-tag">VERIFIED</span></td></tr>
+                                <tr><td>2024-05421-MN-0</td><td>Juan Dela Cruz</td><td>07:42:05 AM</td><td><span class="status-tag late-tag">LATE</span></td></tr>
+                                <tr><td>2024-09112-MN-0</td><td>Jane Doe</td><td>--:--:--</td><td><span class="status-tag absent-tag">ABSENT</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="tab-guide" class="tab-content hidden">
+                    <div class="display-panel text-guide">
+                        <h2 class="panel-title">IN-HINYERO ARCHITECTURE PROTOCOL</h2>
+                        <div class="guide-box">
+                            <h3>1. Verification Rule Framework</h3>
+                            <p>To pass the system checks, your location variance must be within CEA coordinates. Room verification QR handles terminal locking.</p>
+                            <h3>2. Biometric Enforcement Policy</h3>
+                            <p>Faces are matched against standard data packets. Failure at any point marks the structural record as <strong style="color: #ff007f;">ABSENT</strong>.</p>
+                            <h3>3. Timestamp Rules</h3>
+                            <p>Logging after 15 minutes triggers a system flag converting the profile state from Present to <strong style="color: #00ffff;">LATE</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
